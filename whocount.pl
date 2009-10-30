@@ -23,6 +23,10 @@
 
 # ----------------------------------------------------------------------
 
+use strict;
+use vars qw($VERSION %IRSSI);
+use Irssi;
+
 $VERSION = '0.0.1';
 %IRSSI   = (
     authors     => 'Svarre',
@@ -37,7 +41,7 @@ $VERSION = '0.0.1';
 
 # ----------------------------------------------------------------------
 
-my $whocount;
+our $whocount;
 
 sub count {
     $whocount++;
@@ -45,10 +49,10 @@ sub count {
 
 sub end_who {
     if ( $whocount == 1 ) {
-        Irssi::printformat( MSGLEVEL_CLIENTCRAP, 'whocount', $whocount, user );
+        Irssi::printformat( MSGLEVEL_CLIENTCRAP, 'whocount', $whocount, 'user' );
     }
     else {
-        Irssi::printformat( MSGLEVEL_CLIENTCRAP, 'whocount', $whocount, users );
+        Irssi::printformat( MSGLEVEL_CLIENTCRAP, 'whocount', $whocount, 'users' );
     }
     $whocount = '0';
 }
