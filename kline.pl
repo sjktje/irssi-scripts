@@ -42,6 +42,9 @@ sub cmd_kline {
     # Don't bother doing anything if we're not connected to the server.
     if ( !$server ) { Irssi::print("Not connected to server"); return; }
 
+	# No point in trying to kline if we aren't opered.
+	if ( !is_opered() ) { Irssi::print("Oper status is required to set klines."); return; }
+
     $argv = parse_args($data);
 
     if ( $argv->{nick} =~ /@/ ) {    # If nick contains a @, treat it as a host
@@ -77,6 +80,16 @@ sub cmd_kline {
 
     $server->send_raw("USERHOST $argv->{nick}");
 }    # }}}
+
+# {{{ sub is_opered
+sub is_opered {
+	my ($umode) = Irssi::active_win()->{'active_server'}->{'usermode'};
+	if ($umode =~ /[oO]/) {
+		return 1;
+	} else {
+		return 0;
+	}
+} # }}}
 
 # {{{ sub redir_userhost
 sub redir_userhost {
