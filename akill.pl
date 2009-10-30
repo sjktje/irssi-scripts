@@ -24,7 +24,12 @@
 use strict;
 use vars qw($VERSION %IRSSI);
 
-use Irssi;
+use Irssi qw(
+	settings_get_str settings_get_bool 
+	settings_add_str settings_add_bool 
+	command_bind signal_add active_win
+);
+
 use Getopt::Long;
 
 $VERSION = "0.2.0";
@@ -71,7 +76,6 @@ sub cmd_akill {
 			$nick->{host} =~ /([^@]+)@(.*)/;
 			$argv->{user} = $1;
 			$argv->{host} = $2;
-			Irssi::print("host: $nick->{host}");
             set_akill( $server, $argv );
             return;
         }
@@ -94,7 +98,7 @@ sub cmd_akill {
 
 # {{{ sub is_opered
 sub is_opered {
-	my ($umode) = Irssi::active_win()->{'active_server'}->{'usermode'};
+	my ($umode) = active_win()->{'active_server'}->{'usermode'};
 	if ($umode =~ /[oO]/) {
 		return 1;
 	} else {
@@ -124,10 +128,10 @@ sub redir_userhost {
 sub set_akill {
     my ( $server, $argv ) = @_;
 
-	my $operserv = Irssi::settings_get_str('akill_operserv');
+	my $operserv = settings_get_str('akill_operserv');
 	
-	$argv->{user} = "*" if Irssi::settings_get_bool('akill_host_only');
-	$argv->{user} =~ s/^~/\*/ if Irssi::settings_get_bool('akill_tilde_to_star');	
+	$argv->{user} = "*" if settings_get_bool('akill_host_only');
+	$argv->{user} =~ s/^~/\*/ if settings_get_bool('akill_tilde_to_star');	
 
     # XXX: We should use send_raw_now here, really.
     if ( $argv->{perm} ) {
@@ -158,10 +162,10 @@ sub parse_args {
     for my $n (@ARGV) { $arg->{reason} .= $n . " "; }
 
     if ( !defined( $arg->{reason} ) ) {
-        $arg->{reason} = Irssi::settings_get_str('akill_reason');
+        $arg->{reason} = settings_get_str('akill_reason');
     }
     if ( !defined( $arg->{duration} ) ) {
-        $arg->{duration} = Irssi::settings_get_str('akill_duration');
+        $arg->{duration} = settings_get_str('akill_duration');
     }
 
     return $arg;
@@ -174,10 +178,10 @@ sub print_usage {
     );
 }    # }}}
 
-Irssi::command_bind( 'akill', 'cmd_akill' );
-Irssi::signal_add( 'redir redir_userhost', 'redir_userhost' );
-Irssi::settings_add_str( 'akill', 'akill_duration', '1w' );
-Irssi::settings_add_str( 'akill', 'akill_reason',   'drones/flooding' );
-Irssi::settings_add_str( 'akill', 'akill_operserv', 'OperServ' );
-Irssi::settings_add_bool( 'akill', 'akill_host_only', 0 );
-Irssi::settings_add_bool( 'akill', 'akill_tilde_to_star', 1 );
+command_bind( 'akill', 'cmd_akill' );
+signal_add( 'redir redir_userhost', 'redir_userhost' );
+settings_add_str( 'akill', 'akill_duration', '1w' );
+settings_add_str( 'akill', 'akill_reason',   'drones/flooding' );
+settings_add_str( 'akill', 'akill_operserv', 'OperServ' );
+settings_add_bool( 'akill', 'akill_host_only', 0 );
+settings_add_bool( 'akill', 'akill_tilde_to_star', 1 );
