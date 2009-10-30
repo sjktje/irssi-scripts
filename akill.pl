@@ -18,7 +18,9 @@
 # /set akill_duration duration (default 1w)
 # /set akill_reason reason (default drones/flooding)
 # /set akill_operserv nick (default OperServ)
-#
+# /toggle akill_host_only (default off)
+# /toggle akill_tilde_to_star (default on)
+
 use strict;
 use vars qw($VERSION %IRSSI);
 
@@ -66,8 +68,10 @@ sub cmd_akill {
     # If so, grab nicks host and akill
     for my $chan ( $server->channels ) {
         if ( $nick = $chan->nick_find( $argv->{nick} ) ) {
-            $argv->{host} = $nick->{host};
-            $argv->{host} =~ s/^.*@/\*@/;
+			$nick->{host} =~ /([^@]+)@(.*)/;
+			$argv->{user} = $1;
+			$argv->{host} = $2;
+			Irssi::print("host: $nick->{host}");
             set_akill( $server, $argv );
             return;
         }
@@ -102,15 +106,16 @@ sub is_opered {
 sub redir_userhost {
     my ( $server, $data ) = @_;
     if ( !$data ) { Irssi::print("Couldn't find nick."); }
-
-    if ( $data =~ /^[^\s]+\s:([^=]+)=[^@]+\@(.*)/ ) {
+	
+    if ( $data =~ /^[^\s]+\s:(?:[^=]+)=\+?([^@]+)\@(.*)/ ) {
 
         # Let's not akill opers.
-        if ( $1 =~ /\*$/ ) {
+        if ( $2 =~ /\*$/ ) {
             Irssi::print("We don't akill opers, aye?");
             return;
         }
-        $argv->{host} = "*\@$2";
+		$argv->{user} = $1;
+        $argv->{host} = $2;
         set_akill( $server, $argv );
     }
 }    # }}}
@@ -120,13 +125,17 @@ sub set_akill {
     my ( $server, $argv ) = @_;
 
 	my $operserv = Irssi::settings_get_str('akill_operserv');
+	
+	$argv->{user} = "*" if Irssi::settings_get_bool('akill_host_only');
+	$argv->{user} =~ s/^~/\*/ if Irssi::settings_get_bool('akill_tilde_to_star');	
+
     # XXX: We should use send_raw_now here, really.
     if ( $argv->{perm} ) {
-		$server->command("PRIVMSG $operserv :AKILL ADD $argv->{host} !P $argv->{reason}");
+		$server->command("PRIVMSG $operserv :AKILL ADD $argv->{user}\@$argv->{host} !P $argv->{reason}");
     }
     else {
 		$server->command(
-			"PRIVMSG $operserv :AKILL ADD $argv->{host} !T $argv->{duration} $argv->{reason}");
+			"PRIVMSG $operserv :AKILL ADD $argv->{user}\@$argv->{host} !T $argv->{duration} $argv->{reason}");
     }
 }    # }}}
 
@@ -170,3 +179,5 @@ Irssi::signal_add( 'redir redir_userhost', 'redir_userhost' );
 Irssi::settings_add_str( 'akill', 'akill_duration', '1w' );
 Irssi::settings_add_str( 'akill', 'akill_reason',   'drones/flooding' );
 Irssi::settings_add_str( 'akill', 'akill_operserv', 'OperServ' );
+Irssi::settings_add_bool( 'akill', 'akill_host_only', 0 );
+Irssi::settings_add_bool( 'akill', 'akill_tilde_to_star', 1 );
