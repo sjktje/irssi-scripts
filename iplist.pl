@@ -49,7 +49,7 @@ $VERSION = "0.1";
     description => 'Writes channel members IPs to file',
     license     => 'BSDL',
     url         => 'http://sjk.ankeborg.nu',
-    changed     => 'Mon Oct 12 19:23:57 2009',
+    changed     => 'Fri Oct 30 18:24:41 2009',
 );
 
 my $opt;
@@ -135,8 +135,6 @@ sub chantrace_end {
     }
     close(IPFILE);
     Irssi::print("Wrote file");
-    $opt->{global} = 0;
-    $opt->{opers}  = 0;
 }
 
 Irssi::command_bind( "iplist", "cmd_iplist" );
