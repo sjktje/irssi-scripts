@@ -11,7 +11,14 @@
 # WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-
+#
+# This script has been tested on Ambernet with atheme-services 4.0.1
+# 
+# Settings: 
+# /set akill_duration duration (default 1w)
+# /set akill_reason reason (default drones/flooding)
+# /set akill_operserv nick (default OperServ)
+#
 use strict;
 use vars qw($VERSION %IRSSI);
 
@@ -26,7 +33,7 @@ $VERSION = "0.1.1";
     name    => 'akill',
     description =>
       '/akill [-perm|-time <nm|h|d|w>] <nick|host> <reason>',
-    changed => 'Tue Jan  6 12:42:47 2009',
+    changed => 'Fri Oct 30 19:16:47 2009',
     license => 'BSDL',
 );
 
@@ -162,4 +169,4 @@ Irssi::command_bind( 'akill', 'cmd_akill' );
 Irssi::signal_add( 'redir redir_userhost', 'redir_userhost' );
 Irssi::settings_add_str( 'akill', 'akill_duration', '1w' );
 Irssi::settings_add_str( 'akill', 'akill_reason',   'drones/flooding' );
-Irssi::settings_add_str( 'akill', 'akill_operserv', 'sjk' );
+Irssi::settings_add_str( 'akill', 'akill_operserv', 'OperServ' );
