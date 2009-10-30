@@ -27,7 +27,7 @@ use vars qw($VERSION %IRSSI);
 use Irssi;
 use Getopt::Long;
 
-$VERSION = "0.1.1";
+$VERSION = "0.2.0";
 
 %IRSSI = (
     authors => 'Svante J. Kvarnstrom',
