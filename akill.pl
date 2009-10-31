@@ -28,7 +28,8 @@ use Irssi qw(
 	settings_get_str settings_get_bool 
 	settings_add_str settings_add_bool 
 	command_bind signal_add active_win
-	command_set_options
+	command_set_options theme_register
+	printformat
 );
 
 use Getopt::Long;
@@ -56,7 +57,7 @@ sub cmd_akill {
 
     $argv = parse_args($data);
 
-	if ($argv->{help}) { print_usage(); return; }
+	if ($argv->{help}) { show_help(); return; }
 
     if ( $argv->{nick} =~ /@/ ) {    # If nick contains a @, treat it as a host
         $argv->{host} = $argv->{nick};
@@ -165,11 +166,65 @@ sub parse_args {
     return $arg;
 }
 
-sub print_usage {
-    Irssi::print(
-"Usage: /AKILL [-duration | -time <nm|h|d|w> | -perm] <nick> [reason]"
-    );
+# Borrowed the following sub (with some modifications) from Joost Vunderinks
+# HOSC::Tools.
+sub print_help {
+    my ($item, @help) = @_;
+
+    for my $format (qw[header setting syntax argument]) {
+        if ($item eq $format) {
+            printformat(MSGLEVEL_CLIENTCRAP, 'akill_' . $item, @help);
+            return;
+        }
+    }
+
+    printformat(MSGLEVEL_CLIENTCRAP, 'akill_help', @_);
 }
+
+sub print_usage {
+	print_help('header', 'Syntax');
+	print_help('syntax', '/akill -help');
+	print_help('syntax', '/akill -<switch> <nick | user@host> [reason]');
+}
+
+sub show_help {
+	print_usage();
+	print_help('header', 'Introduction');
+	print_help('This script lets you add akills to atheme operator services by '.
+		"using the AKILL command.\n");
+
+	print_help('argument', '-time <n><m|h|d|w>', 
+		'Akill duration in minutes, hours, days or weeks');
+	print_help('argument', '-perm', 'For permanent akills');
+
+	print_help('header', 'Settings');
+	print_help('setting', 'akill_duration',
+		'Default time in minutes ("m"), hours ("h"), days ("d") or weeks ("w") '.
+		'akills should last.');
+	print_help('setting', 'akill_reason', 'Default akill reason');
+	print_help('setting', 'akill_operserv', 'Nickname of OperServ');
+	print_help('setting', 'akill_host_only', 'Toggles akills of *@host.only on/off');
+	print_help('setting', 'akill_tilde_to_star', 
+		'Boolean indicating wether tildes (~) in username should be made to'.
+		' a * instead (*user@host)');
+
+	print_help('header', 'Examples');
+	print_help('argument', '/akill -time 1d Jordan Blabberbot',
+		'Would add a one day long akill for Jordan with reason "Blabberbot"');
+	print_help('argument', '/akill HaHe-92384',
+		'Could, depending on settings, kline HaHe-92384\'s *@host with reason '.
+		'"drones/flooding"');
+	print_help('argument', '/akill *@mail2.somehost.com', 
+		'Would place an akill, with default duration and reason, on the given host.');
+}
+
+theme_register( [
+	'akill_help', '$0-',
+	'akill_header', '%Y$0-%n' . "\n",
+	'akill_setting', '%_$0%_' . "\n" . '$1-' . "\n",
+	'akill_syntax', '%_$0%_' ."\n",
+	'akill_argument', '%_$0%_' . "\n" . '$1-' . "\n"
+] );
 
 command_bind( 'akill', 'cmd_akill' );
 signal_add( 'redir redir_userhost', 'redir_userhost' );
