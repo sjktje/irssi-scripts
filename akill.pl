@@ -28,6 +28,7 @@ use Irssi qw(
 	settings_get_str settings_get_bool 
 	settings_add_str settings_add_bool 
 	command_bind signal_add active_win
+	command_set_options
 );
 
 use Getopt::Long;
@@ -176,3 +177,5 @@ settings_add_str( 'akill', 'akill_reason',   'drones/flooding' );
 settings_add_str( 'akill', 'akill_operserv', 'OperServ' );
 settings_add_bool( 'akill', 'akill_host_only', 0 );
 settings_add_bool( 'akill', 'akill_tilde_to_star', 1 );
+
+command_set_options('akill', 'perm time duration');
