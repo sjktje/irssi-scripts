@@ -50,13 +50,13 @@ my $argv;
 sub cmd_akill {
     my ( $data, $server, $witem ) = @_;
 
-    if ( $data =~ /^help/i || !$data ) { print_usage(); return; }
-
+    if ( !$data ) { print_usage(); return; }
     if ( !$server ) { Irssi::print("Not connected to server"); return; }
-
 	if ( !is_opered() ) { Irssi::print("Oper status is required to set akills."); return; }
 
     $argv = parse_args($data);
+
+	if ($argv->{help}) { print_usage(); return; }
 
     if ( $argv->{nick} =~ /@/ ) {    # If nick contains a @, treat it as a host
         $argv->{host} = $argv->{nick};
@@ -148,6 +148,7 @@ sub parse_args {
         'time=s'     => \$arg->{duration},
         'duration=s' => \$arg->{duration},
         'perm'       => \$arg->{perm},
+		'help'		 => \$arg->{help}
     );
 
     if (@ARGV) { $arg->{nick} = shift @ARGV; }
@@ -178,4 +179,4 @@ settings_add_str( 'akill', 'akill_operserv', 'OperServ' );
 settings_add_bool( 'akill', 'akill_host_only', 0 );
 settings_add_bool( 'akill', 'akill_tilde_to_star', 1 );
 
-command_set_options('akill', 'perm time duration');
+command_set_options('akill', 'perm time duration help');
