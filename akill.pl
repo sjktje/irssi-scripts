@@ -46,17 +46,13 @@ $VERSION = "0.2.0";
 
 my $argv;
 
-# {{{ sub cmd_akill
 sub cmd_akill {
     my ( $data, $server, $witem ) = @_;
 
-    # If first arg is "help", print usage
     if ( $data =~ /^help/i || !$data ) { print_usage(); return; }
 
-    # Don't bother doing anything if we're not connected to the server.
     if ( !$server ) { Irssi::print("Not connected to server"); return; }
 
-	# No point in trying to akill if we aren't opered.
 	if ( !is_opered() ) { Irssi::print("Oper status is required to set akills."); return; }
 
     $argv = parse_args($data);
@@ -67,7 +63,7 @@ sub cmd_akill {
         return;
     }
 
-    my $nick;                        # Nick of user to akill
+    my $nick;                        
 
     # Start off by looping through channels and see if $nick's in any of em.
     # If so, grab nicks host and akill
@@ -94,9 +90,8 @@ sub cmd_akill {
     );
 
     $server->send_raw("USERHOST $argv->{nick}");
-}    # }}}
+}    
 
-# {{{ sub is_opered
 sub is_opered {
 	my ($umode) = active_win()->{'active_server'}->{'usermode'};
 	if ($umode =~ /[oO]/) {
@@ -104,9 +99,8 @@ sub is_opered {
 	} else {
 		return 0;
 	}
-} # }}}
+} 
 
-# {{{ sub redir_userhost
 sub redir_userhost {
     my ( $server, $data ) = @_;
     if ( !$data ) { Irssi::print("Couldn't find nick."); }
@@ -122,9 +116,8 @@ sub redir_userhost {
         $argv->{host} = $2;
         set_akill( $server, $argv );
     }
-}    # }}}
+} 
 
-# {{{ sub set_akill
 sub set_akill {
     my ( $server, $argv ) = @_;
 
@@ -141,9 +134,8 @@ sub set_akill {
 		$server->command(
 			"PRIVMSG $operserv :AKILL ADD $argv->{user}\@$argv->{host} !T $argv->{duration} $argv->{reason}");
     }
-}    # }}}
+}  
 
-# {{{ sub parse_args
 sub parse_args {
     my ($data) = @_;
 
@@ -169,14 +161,13 @@ sub parse_args {
     }
 
     return $arg;
-}    # }}}
+}
 
-# {{{ sub print_usage
 sub print_usage {
     Irssi::print(
 "Usage: /AKILL [-duration | -time <nm|h|d|w> | -perm] <nick> [reason]"
     );
-}    # }}}
+}
 
 command_bind( 'akill', 'cmd_akill' );
 signal_add( 'redir redir_userhost', 'redir_userhost' );
