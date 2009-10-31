@@ -212,7 +212,7 @@ sub show_help {
 	print_help('argument', '/akill -time 1d Jordan Blabberbot',
 		'Would add a one day long akill for Jordan with reason "Blabberbot"');
 	print_help('argument', '/akill HaHe-92384',
-		'Could, depending on settings, kline HaHe-92384\'s *@host with reason '.
+		'Could, depending on settings, akill HaHe-92384\'s *@host with reason '.
 		'"drones/flooding"');
 	print_help('argument', '/akill *@mail2.somehost.com', 
 		'Would place an akill, with default duration and reason, on the given host.');
