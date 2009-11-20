@@ -1,0 +1,24 @@
+
+akill.pl		Makes adding AKILLs to OperServ easier
+
+iplist.pl		Writes ips of channel members to file
+
+kline.pl		Makes adding klines easy as pie.
+
+lobby.pl		Issues /LOBBY on connecting clients (useless unless you oper on
+				a Ambernet server running lobby.so)
+
+lusergraph.pl   Grabs local/global user count from server and writes
+				a mrtg-friendly file
+
+qkill.pl		/qkill nick1,nick2,nick3 [reason]
+
+rwho.pl			This script is not really working anymore and is only in the
+				repository for historical reasons. It was used by me, sjk, on
+				Undernet in 2006 or so to detect "real name clones". I don't 
+				think this particular version of the script is actually working.
+
+warnkick.pl		This script warns you if you get kicked from a channel. Prints
+				a warning and hilights the channels refnum.
+
+whocount.pl		Adds a total count to /who replies
