@@ -1,24 +1,41 @@
 
-akill.pl		Makes adding AKILLs to OperServ easier
+h2.	akill.pl
 
-iplist.pl		Writes ips of channel members to file
+Makes adding AKILLs to OperServ easier
 
-kline.pl		Makes adding klines easy as pie.
+h2. iplist.pli
 
-lobby.pl		Issues /LOBBY on connecting clients (useless unless you oper on
-				a Ambernet server running lobby.so)
+Writes ips of channel members to file
 
-lusergraph.pl   Grabs local/global user count from server and writes
-				a mrtg-friendly file
+h2. kline.pl 
 
-qkill.pl		/qkill nick1,nick2,nick3 [reason]
+Makes adding klines easy as pie.
 
-rwho.pl			This script is not really working anymore and is only in the
-				repository for historical reasons. It was used by me, sjk, on
-				Undernet in 2006 or so to detect "real name clones". I don't 
-				think this particular version of the script is actually working.
+h2. lobby.pl	
 
-warnkick.pl		This script warns you if you get kicked from a channel. Prints
-				a warning and hilights the channels refnum.
+Issues /LOBBY on connecting clients (useless unless you oper on a Ambernet 
+server running lobby.so)
 
-whocount.pl		Adds a total count to /who replies
+h2. lusergraph.pl
+
+Grabs local/global user count from server and writes a mrtg-friendly file
+
+h2. qkill.pl
+
+/qkill nick1,nick2,nick3 [reason]
+
+h2. rwho.pl
+
+This script is not really working anymore and is only in the repository for 
+historical reasons. It was used by me, sjk, on Undernet in 2006 or so to 
+detect "real name clones". I don't think this particular version of the script 
+is actually working.
+
+h2. warnkick.pl	
+
+This script warns you if you get kicked from a channel. Prints a warning and
+hilights the channels refnum.
+
+h2. whocount.pl
+
+Adds a total count to /who replies
