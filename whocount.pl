@@ -1,5 +1,5 @@
 # whocount.pl
-# Newest version can always be found at http://www.svarre.net/code.php
+# Newest version can always be found at http://github.com/sjktje/irssi-scripts 
 #
 # This program is free software, you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
