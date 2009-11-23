@@ -166,3 +166,5 @@ Irssi::command_bind( 'kline', 'cmd_kline' );
 Irssi::signal_add( 'redir redir_userhost', 'redir_userhost' );
 Irssi::settings_add_str( 'kline', 'kline_duration', '14400' );
 Irssi::settings_add_str( 'kline', 'kline_reason',   'drones/flooding' );
+
+Irssi::command_set_options( 'kline', 'time duration server on perm'); 
