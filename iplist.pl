@@ -117,7 +117,6 @@ sub chantrace_line {
 sub chantrace_end {
     my $file = Irssi::settings_get_str("iplist_path");
     $file =~ /(.*)\//;
-    Irssi::print("$file");
     if ( $opt->{full} ) {
         $file .= "/iplist-" . $opt->{channel} . "-full.txt";
         open( IPFILE, ">$file" ) or die("Could not open file $file: $!");
@@ -127,14 +126,12 @@ sub chantrace_end {
     }
     else {
         $file .= "/iplist-" . $opt->{channel} . ".txt";
-        Irssi::print("File: $file");
         open( IPFILE, ">$file" ) or die("Could not open file $file: $!");
         foreach my $key ( sort { $a <=> $b } keys %ips ) {
             print IPFILE "$key\n";
         }
     }
     close(IPFILE);
-    Irssi::print("Wrote file");
 }
 
 Irssi::command_bind( "iplist", "cmd_iplist" );
