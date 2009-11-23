@@ -42,7 +42,7 @@ $VERSION = "0.2.0";
     name    => 'akill',
     description =>
       '/akill [-perm|-time <nm|h|d|w>] <nick|host> <reason>',
-    changed => 'Fri Oct 30 19:16:47 2009',
+    changed => 'Mon Nov 23 20:28:51 2009',
     license => 'BSDL',
 );
 
@@ -58,6 +58,11 @@ sub cmd_akill {
     $argv = parse_args($data);
 
 	if ($argv->{help}) { show_help(); return; }
+
+    if (defined($argv->{list})) { 
+        akill_list($server, $argv->{list});
+        return;
+    }
 
     if ( $argv->{nick} =~ /@/ ) {    # If nick contains a @, treat it as a host
         $argv->{host} = $argv->{nick};
@@ -138,6 +143,15 @@ sub set_akill {
     }
 }  
 
+sub akill_list {
+    my ($server, $argv) = @_;
+    chomp($argv);
+    my $operserv = settings_get_str('akill_operserv');
+    my $msg = ":AKILL LIST ". ($argv ? ($argv." ") : "") ."FULL";
+    $server->command("PRIVMSG $operserv $msg");
+    return;
+}
+
 sub parse_args {
     my ($data) = @_;
 
@@ -149,7 +163,8 @@ sub parse_args {
         'time=s'     => \$arg->{duration},
         'duration=s' => \$arg->{duration},
         'perm'       => \$arg->{perm},
-		'help'		 => \$arg->{help}
+		'help'		 => \$arg->{help},
+        'list:s'     => \$arg->{list}
     );
 
     if (@ARGV) { $arg->{nick} = shift @ARGV; }
@@ -196,6 +211,8 @@ sub show_help {
 	print_help('argument', '-time <n><m|h|d|w>', 
 		'Akill duration in minutes, hours, days or weeks');
 	print_help('argument', '-perm', 'For permanent akills');
+    print_help('argument', '-list <host>',
+        'Makes OperServ list any akills matching <host>');
 
 	print_help('header', 'Settings');
 	print_help('setting', 'akill_duration',
@@ -234,4 +251,4 @@ settings_add_str( 'akill', 'akill_operserv', 'OperServ' );
 settings_add_bool( 'akill', 'akill_host_only', 0 );
 settings_add_bool( 'akill', 'akill_tilde_to_star', 1 );
 
-command_set_options('akill', 'perm time duration help');
+command_set_options('akill', 'perm time duration help list');
