@@ -41,7 +41,7 @@ $VERSION = "0.2.1";
     contact => 'sjk@ankeborg.nu',
     name    => 'akill',
     description =>
-      '/akill [-perm|-time <nm|h|d|w>] <nick|host> <reason>',
+      '/akill [-perm|-time <nm|h|d|w>|-list] <nick|host> <reason>',
     changed => 'Mon Nov 23 20:28:51 2009',
     license => 'BSDL',
 );
