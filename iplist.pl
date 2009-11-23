@@ -34,6 +34,10 @@
 # The script ignores spoofed users as well as server operators.
 #
 # Tested on ircd-ratbox 2.2.6
+#
+# TODO 
+# * Don't use operspy chantrace if we're already on the channel.
+# * Don't include our own host/ip if iplisting a channel we're in.
 
 use strict;
 use Irssi;
