@@ -41,7 +41,7 @@ use Irssi::Irc;
 use Getopt::Long;
 use vars qw($VERSION %IRSSI);
 
-$VERSION = "0.1";
+$VERSION = "0.1.1";
 %IRSSI   = (
     authors     => 'Svante Kvarnstrom',
     contact     => 'sjk@ankeborg.nu',
@@ -152,3 +152,5 @@ Irssi::Irc::Server::redirect_register(
     },
     undef
 );
+
+Irssi::command_set_options('iplist', 'full');
