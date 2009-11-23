@@ -1,9 +1,8 @@
-
 h2.	akill.pl
 
 Makes adding AKILLs to OperServ easier
 
-h2. iplist.pli
+h2. iplist.pl
 
 Writes ips of channel members to file
 
