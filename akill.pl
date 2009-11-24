@@ -182,7 +182,11 @@ sub parse_args {
     if ( !defined( $arg->{duration} ) ) {
         $arg->{duration} = settings_get_str('akill_duration');
     }
-
+    
+    # In Atheme OperServ, valid akill duration tokens are "h" (hours),
+    # "d" (days) and "w" (weeks). One might think that "m" would work for
+    # minutes, but it doesn't. So strip any m's out of the duration.
+    $arg->{duration} =~ s/m//i;
     return $arg;
 }
 
