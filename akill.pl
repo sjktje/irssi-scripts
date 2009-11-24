@@ -29,12 +29,12 @@ use Irssi qw(
 	settings_add_str settings_add_bool 
 	command_bind signal_add active_win
 	command_set_options theme_register
-	printformat
+	printformat command_bind_last
 );
 
 use Getopt::Long;
 
-$VERSION = "0.2.1";
+$VERSION = "0.2.2";
 
 %IRSSI = (
     authors => 'Svante J. Kvarnstrom',
@@ -98,6 +98,11 @@ sub cmd_akill {
 
     $server->send_raw("USERHOST $argv->{nick}");
 }    
+
+sub cmd_help {
+    my ($data, $server, $witem) = @_;
+    show_help() if $data =~ /^\s*akill/i;
+}
 
 sub is_opered {
 	my ($umode) = active_win()->{'active_server'}->{'usermode'};
@@ -244,6 +249,7 @@ theme_register( [
 ] );
 
 command_bind( 'akill', 'cmd_akill' );
+command_bind_last('help', 'cmd_help');
 signal_add( 'redir redir_userhost', 'redir_userhost' );
 settings_add_str( 'akill', 'akill_duration', '1w' );
 settings_add_str( 'akill', 'akill_reason',   'drones/flooding' );
