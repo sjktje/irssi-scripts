@@ -36,7 +36,6 @@
 # Tested on ircd-ratbox 2.2.6
 #
 # TODO 
-# * Don't use operspy chantrace if we're already on the channel.
 # * Don't include our own host/ip if iplisting a channel we're in.
 
 use strict;
@@ -93,7 +92,24 @@ sub cmd_iplist {
         }
     );
 
-    $server->send_raw_now("CHANTRACE !$opt->{channel}");
+    $server->send_raw_now(
+        "CHANTRACE ". 
+        (channel_joined($opt->{channel}) ? '' : '!').
+        $opt->{channel}
+    );
+}
+
+# channel_joined("#chan") returns true if we're on #chan, false if not.
+sub channel_joined {
+    my ($data) = @_;
+    my $server = Irssi::active_server();
+    for my $chan ($server->channels) {
+        if (lc($data) eq lc($chan->{name})) {
+            return 1;
+        }
+    }
+    
+    return 0;
 }
 
 # Add IPs to the %ips hash.
