@@ -80,11 +80,18 @@ sub cmd_akill {
     # If so, grab nicks host and akill
     for my $chan ( $server->channels ) {
         if ( $nick = $chan->nick_find( $argv->{nick} ) ) {
+            
+            if ($nick->{serverop}) {
+                Irssi::print("We don't akill opers, aye?");
+                return;
+            }
+
             $nick->{host} =~ /([^@]+)@(.*)/;
             $argv->{user} = $1;
             $argv->{host} = $2;
             set_akill( $server, $argv );
             return;
+
         }
     }
 
@@ -121,15 +128,15 @@ sub redir_userhost {
     my ( $server, $data ) = @_;
     if ( !$data ) { Irssi::print("Couldn't find nick."); }
     
-    if ( $data =~ /^[^\s]+\s:(?:[^=]+)=\+?([^@]+)\@(.*)/ ) {
+    if ( $data =~ /^[^\s]+\s:([^=]+)=\+?([^@]+)\@(.*)/ ) {
 
         # Let's not akill opers.
-        if ( $2 =~ /\*$/ ) {
+        if ( $1 =~ /\*$/ ) {
             Irssi::print("We don't akill opers, aye?");
             return;
         }
-        $argv->{user} = $1;
-        $argv->{host} = $2;
+        $argv->{user} = $2;
+        $argv->{host} = $3;
         set_akill( $server, $argv );
     }
 } 
