@@ -25,11 +25,11 @@ use strict;
 use vars qw($VERSION %IRSSI);
 
 use Irssi qw(
-	settings_get_str settings_get_bool 
-	settings_add_str settings_add_bool 
-	command_bind signal_add active_win
-	command_set_options theme_register
-	printformat command_bind_last
+    settings_get_str settings_get_bool 
+    settings_add_str settings_add_bool 
+    command_bind signal_add active_win
+    command_set_options theme_register
+    printformat command_bind_last
 );
 
 use Getopt::Long;
@@ -53,11 +53,11 @@ sub cmd_akill {
 
     if ( !$data ) { print_usage(); return; }
     if ( !$server ) { Irssi::print("Not connected to server"); return; }
-	if ( !is_opered() ) { Irssi::print("Oper status is required to set akills."); return; }
+    if ( !is_opered() ) { Irssi::print("Oper status is required to set akills."); return; }
 
     $argv = parse_args($data);
 
-	if ($argv->{help}) { show_help(); return; }
+    if ($argv->{help}) { show_help(); return; }
 
     if (defined($argv->{list})) { 
         akill_list($server, $argv->{list});
@@ -76,9 +76,9 @@ sub cmd_akill {
     # If so, grab nicks host and akill
     for my $chan ( $server->channels ) {
         if ( $nick = $chan->nick_find( $argv->{nick} ) ) {
-			$nick->{host} =~ /([^@]+)@(.*)/;
-			$argv->{user} = $1;
-			$argv->{host} = $2;
+            $nick->{host} =~ /([^@]+)@(.*)/;
+            $argv->{user} = $1;
+            $argv->{host} = $2;
             set_akill( $server, $argv );
             return;
         }
@@ -105,18 +105,18 @@ sub cmd_help {
 }
 
 sub is_opered {
-	my ($umode) = active_win()->{'active_server'}->{'usermode'};
-	if ($umode =~ /[oO]/) {
-		return 1;
-	} else {
-		return 0;
-	}
+    my ($umode) = active_win()->{'active_server'}->{'usermode'};
+    if ($umode =~ /[oO]/) {
+        return 1;
+    } else {
+        return 0;
+    }
 } 
 
 sub redir_userhost {
     my ( $server, $data ) = @_;
     if ( !$data ) { Irssi::print("Couldn't find nick."); }
-	
+    
     if ( $data =~ /^[^\s]+\s:(?:[^=]+)=\+?([^@]+)\@(.*)/ ) {
 
         # Let's not akill opers.
@@ -124,7 +124,7 @@ sub redir_userhost {
             Irssi::print("We don't akill opers, aye?");
             return;
         }
-		$argv->{user} = $1;
+        $argv->{user} = $1;
         $argv->{host} = $2;
         set_akill( $server, $argv );
     }
@@ -133,18 +133,18 @@ sub redir_userhost {
 sub set_akill {
     my ( $server, $argv ) = @_;
 
-	my $operserv = settings_get_str('akill_operserv');
-	
-	$argv->{user} = "*" if settings_get_bool('akill_host_only');
-	$argv->{user} =~ s/^~/\*/ if settings_get_bool('akill_tilde_to_star');	
+    my $operserv = settings_get_str('akill_operserv');
+    
+    $argv->{user} = "*" if settings_get_bool('akill_host_only');
+    $argv->{user} =~ s/^~/\*/ if settings_get_bool('akill_tilde_to_star');    
 
     # XXX: We should use send_raw_now here, really.
     if ( $argv->{perm} ) {
-		$server->command("PRIVMSG $operserv :AKILL ADD $argv->{user}\@$argv->{host} !P $argv->{reason}");
+        $server->command("PRIVMSG $operserv :AKILL ADD $argv->{user}\@$argv->{host} !P $argv->{reason}");
     }
     else {
-		$server->command(
-			"PRIVMSG $operserv :AKILL ADD $argv->{user}\@$argv->{host} !T $argv->{duration} $argv->{reason}");
+        $server->command(
+            "PRIVMSG $operserv :AKILL ADD $argv->{user}\@$argv->{host} !T $argv->{duration} $argv->{reason}");
     }
 }  
 
@@ -168,7 +168,7 @@ sub parse_args {
         'time=s'     => \$arg->{duration},
         'duration=s' => \$arg->{duration},
         'perm'       => \$arg->{perm},
-		'help'		 => \$arg->{help},
+        'help'         => \$arg->{help},
         'list:s'     => \$arg->{list}
     );
 
@@ -206,50 +206,50 @@ sub print_help {
 }
 
 sub print_usage {
-	print_help('header', 'Syntax');
-	print_help('syntax', '/akill -help');
-	print_help('syntax', '/akill -<switch> <nick | user@host> [reason]');
+    print_help('header', 'Syntax');
+    print_help('syntax', '/akill -help');
+    print_help('syntax', '/akill -<switch> <nick | user@host> [reason]');
 }
 
 sub show_help {
-	print_usage();
-	print_help('header', 'Introduction');
-	print_help('This script lets you add akills to atheme operator services by '.
-		"using the AKILL command.\n");
+    print_usage();
+    print_help('header', 'Introduction');
+    print_help('This script lets you add akills to atheme operator services by '.
+        "using the AKILL command.\n");
 
-	print_help('argument', '-time <n><m|h|d|w>', 
-		'Akill duration in minutes, hours, days or weeks');
-	print_help('argument', '-perm', 'For permanent akills');
+    print_help('argument', '-time <n><m|h|d|w>', 
+        'Akill duration in minutes, hours, days or weeks');
+    print_help('argument', '-perm', 'For permanent akills');
     print_help('argument', '-list <host>',
         'Makes OperServ list any akills matching <host>');
 
-	print_help('header', 'Settings');
-	print_help('setting', 'akill_duration',
-		'Default time in minutes ("m"), hours ("h"), days ("d") or weeks ("w") '.
-		'akills should last.');
-	print_help('setting', 'akill_reason', 'Default akill reason');
-	print_help('setting', 'akill_operserv', 'Nickname of OperServ');
-	print_help('setting', 'akill_host_only', 'Toggles akills of *@host.only on/off');
-	print_help('setting', 'akill_tilde_to_star', 
-		'Boolean indicating wether tildes (~) in username should be made to'.
-		' a * instead (*user@host)');
+    print_help('header', 'Settings');
+    print_help('setting', 'akill_duration',
+        'Default time in minutes ("m"), hours ("h"), days ("d") or weeks ("w") '.
+        'akills should last.');
+    print_help('setting', 'akill_reason', 'Default akill reason');
+    print_help('setting', 'akill_operserv', 'Nickname of OperServ');
+    print_help('setting', 'akill_host_only', 'Toggles akills of *@host.only on/off');
+    print_help('setting', 'akill_tilde_to_star', 
+        'Boolean indicating wether tildes (~) in username should be made to'.
+        ' a * instead (*user@host)');
 
-	print_help('header', 'Examples');
-	print_help('argument', '/akill -time 1d Jordan Blabberbot',
-		'Would add a one day long akill for Jordan with reason "Blabberbot"');
-	print_help('argument', '/akill HaHe-92384',
-		'Could, depending on settings, akill HaHe-92384\'s *@host with reason '.
-		'"drones/flooding"');
-	print_help('argument', '/akill *@mail2.somehost.com', 
-		'Would place an akill, with default duration and reason, on the given host.');
+    print_help('header', 'Examples');
+    print_help('argument', '/akill -time 1d Jordan Blabberbot',
+        'Would add a one day long akill for Jordan with reason "Blabberbot"');
+    print_help('argument', '/akill HaHe-92384',
+        'Could, depending on settings, akill HaHe-92384\'s *@host with reason '.
+        '"drones/flooding"');
+    print_help('argument', '/akill *@mail2.somehost.com', 
+        'Would place an akill, with default duration and reason, on the given host.');
 }
 
 theme_register( [
-	'akill_help', '$0-',
-	'akill_header', '%Y$0-%n' . "\n",
-	'akill_setting', '%_$0%_' . "\n" . '$1-' . "\n",
-	'akill_syntax', '%_$0%_' ."\n",
-	'akill_argument', '%_$0%_' . "\n" . '$1-' . "\n"
+    'akill_help', '$0-',
+    'akill_header', '%Y$0-%n' . "\n",
+    'akill_setting', '%_$0%_' . "\n" . '$1-' . "\n",
+    'akill_syntax', '%_$0%_' ."\n",
+    'akill_argument', '%_$0%_' . "\n" . '$1-' . "\n"
 ] );
 
 command_bind( 'akill', 'cmd_akill' );
