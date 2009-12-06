@@ -20,6 +20,10 @@
 # /set akill_operserv nick (default OperServ)
 # /toggle akill_host_only (default off)
 # /toggle akill_tilde_to_star (default on)
+#
+# TODO
+# Add support for comma seperated nicks (and hostmasks?) eg.
+# /akill -time 60 nick1,nick2,nick3 Flooding is not tolerated
 
 use strict;
 use vars qw($VERSION %IRSSI);
