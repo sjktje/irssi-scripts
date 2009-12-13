@@ -128,7 +128,7 @@ sub redir_userhost {
     my ( $server, $data ) = @_;
     if ( !$data ) { Irssi::print("Couldn't find nick."); }
     
-    if ( $data =~ /^[^\s]+\s:([^=]+)=\+?([^@]+)\@(.*)/ ) {
+    if ( $data =~ /^[^\s]+\s:([^=]+)=[\+\-]?([^@]+)\@(.*)/ ) {
 
         # Let's not akill opers.
         if ( $1 =~ /\*$/ ) {
