@@ -68,31 +68,34 @@ sub cmd_akill {
         return;
     }
 
-    if ( $argv->{nick} =~ /@/ ) {    # If nick contains a @, treat it as a host
-        $argv->{host} = $argv->{nick};
+    if ( $argv->{nick} =~ /([^@]*)@(.*)/ ) {    # If nick contains a @, treat it as a host
+        $argv->{user} = $1;
+        $argv->{host} = $2;
         set_akill( $server, $argv );
         return;
     }
 
-    my $nick;                        
-
     # Start off by looping through channels and see if $nick's in any of em.
     # If so, grab nicks host and akill
-    for my $chan ( $server->channels ) {
-        if ( $nick = $chan->nick_find( $argv->{nick} ) ) {
-            
-            if ($nick->{serverop}) {
-                Irssi::print("We don't akill opers, aye?");
-                return;
+    my $nick = find_nick($server, $argv->{nick});
+
+    if ($nick->{serverop}) {
+        Irssi::print("We don't akill opers, aye?");
+        return;
+    }
+
+    if (defined($nick->{user}) && defined($nick->{host})) {
+        set_akill(
+            $server,
+            {
+                'user'      => $nick->{user},
+                'host'      => $nick->{host},
+                'reason'    => $argv->{reason},
+                'duration'  => $argv->{duration},
+                'perm'      => $argv->{perm}
             }
-
-            $nick->{host} =~ /([^@]+)@(.*)/;
-            $argv->{user} = $1;
-            $argv->{host} = $2;
-            set_akill( $server, $argv );
-            return;
-
-        }
+        );
+        return;
     }
 
     # Ok, didn't find nick in any channels, let's do a /USERHOST
@@ -109,6 +112,27 @@ sub cmd_akill {
 
     $server->send_raw("USERHOST $argv->{nick}");
 }    
+
+sub find_nick {
+    my ($server, $data) = @_;
+
+    my $nick;                        
+    my $ret;
+
+    for my $chan ( $server->channels ) {
+        if ( $nick = $chan->nick_find( $data ) ) {
+            
+            $nick->{host} =~ /([^@]+)@(.*)/;
+
+            $ret->{user} = $1;
+            $ret->{host} = $2;
+            $ret->{serverop} = $nick->{serverop};
+
+            return $ret;
+
+        }
+    }
+}
 
 sub cmd_help {
     my ($data, $server, $witem) = @_;
