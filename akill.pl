@@ -38,7 +38,7 @@ use Irssi qw(
 
 use Getopt::Long;
 
-$VERSION = "0.2.3";
+$VERSION = "0.2.4";
 
 %IRSSI = (
     authors => 'Svante J. Kvarnstrom',
@@ -46,7 +46,7 @@ $VERSION = "0.2.3";
     name    => 'akill',
     description =>
       '/akill [-perm|-time <nm|h|d|w>|-list] <nick|host> <reason>',
-    changed => 'Mon Nov 23 20:28:51 2009',
+    changed => 'Mon Dec 14 11:53:07 2009',
     license => 'BSDL',
 );
 
