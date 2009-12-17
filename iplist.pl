@@ -118,7 +118,6 @@ sub chantrace_line {
     my ( $status, $server, $nick, $username, $host, $ip, $gecos ) =
       ( $1, $2, $3, $4, $5, $6, $7 );
 
-    Irssi::print("Hehe: $server->nick");
     return if !$ip;                   # Ignore spoofs.
     return if $status eq "Oper";      # Ignore server operators.
     return if defined( $ips{ip} );    # We do not want any duplicates.
