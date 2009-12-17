@@ -34,9 +34,6 @@
 # The script ignores spoofed users as well as server operators.
 #
 # Tested on ircd-ratbox 2.2.6
-#
-# TODO 
-# * Don't include our own host/ip if iplisting a channel we're in.
 
 use strict;
 use Irssi;
@@ -121,6 +118,7 @@ sub chantrace_line {
     my ( $status, $server, $nick, $username, $host, $ip, $gecos ) =
       ( $1, $2, $3, $4, $5, $6, $7 );
 
+    Irssi::print("Hehe: $server->nick");
     return if !$ip;                   # Ignore spoofs.
     return if $status eq "Oper";      # Ignore server operators.
     return if defined( $ips{ip} );    # We do not want any duplicates.
