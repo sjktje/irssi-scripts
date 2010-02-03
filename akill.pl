@@ -38,7 +38,7 @@ use Irssi qw(
 
 use Getopt::Long;
 
-$VERSION = "0.2.5";
+$VERSION = "0.2.6";
 
 %IRSSI = (
     authors => 'Svante J. Kvarnstrom',
@@ -173,12 +173,11 @@ sub set_akill {
     $argv->{user} = "*" if settings_get_bool('akill_host_only');
     $argv->{user} =~ s/^~/\*/ if settings_get_bool('akill_tilde_to_star');    
 
-    # XXX: We should use send_raw_now here, really.
     if ( $argv->{perm} ) {
-        $server->command("PRIVMSG $operserv :AKILL ADD $argv->{user}\@$argv->{host} !P $argv->{reason}");
+        $server->send_raw_now("PRIVMSG $operserv :AKILL ADD $argv->{user}\@$argv->{host} !P $argv->{reason}");
     }
     else {
-        $server->command(
+        $server->send_raw_now(
             "PRIVMSG $operserv :AKILL ADD $argv->{user}\@$argv->{host} !T $argv->{duration} $argv->{reason}");
     }
 }  
@@ -188,7 +187,7 @@ sub akill_list {
     chomp($argv);
     my $operserv = settings_get_str('akill_operserv');
     my $msg = ":AKILL LIST ". ($argv ? ($argv." ") : "") ."FULL";
-    $server->command("PRIVMSG $operserv $msg");
+    $server->send_raw_now("PRIVMSG $operserv $msg");
     return;
 }
 
