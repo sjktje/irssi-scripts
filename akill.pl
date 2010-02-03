@@ -128,10 +128,10 @@ sub find_nick {
             $ret->{host} = $2;
             $ret->{serverop} = $nick->{serverop};
 
-            return $ret;
-
+            last;
         }
     }
+    return $ret;
 }
 
 sub cmd_help {
