@@ -1,7 +1,7 @@
 # Irssi scripts
 
 This repository contains a set of Irssi scripts. All, except
-`warnkick.pl`, only make sense if your client is opered.
+`warnkick` and `whocount`, make sense only if your client is opered.
 
 ## akill
 
