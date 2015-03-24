@@ -75,8 +75,7 @@ this on ircds that permit oper flooding. The default is to use the send queue.
 
 This script is not really working anymore and is only in the repository for
 historical reasons. It was used by me, sjk, on Undernet in 2006 or so to
-detect "real name clones". I don't think this particular version of the script
-is actually working.
+detect "real name clones". 
 
 ## warnkick
 
