@@ -5,7 +5,7 @@ This repository contains a set of Irssi scripts. All, except
 
 ## akill
 
-This script makes adding AKILL's to OperServ easy as pie. Available settings:
+This script makes adding AKILLs to OperServ easy as pie. Available settings:
 
     /set akill_duration duration (default 1w)
     /set akill_reason reason (default drones/flooding)
