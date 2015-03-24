@@ -19,7 +19,10 @@
 
 # Changelog:
 # v0.0.1 - Svarre <svarre@svarre.net> - 2004-06-09
-#	Initial release
+#   Initial release
+# v0.0.2 - Svarre <sjk@ankeborg.nu> - 2015-03-24
+#   Updated %IRSSI. Removed the "Scriptinfo: Loaded whocount [...]". Let's
+#   keep it simple.
 
 # ----------------------------------------------------------------------
 
@@ -27,16 +30,14 @@ use strict;
 use vars qw($VERSION %IRSSI);
 use Irssi;
 
-$VERSION = '0.0.1';
+$VERSION = '0.0.2';
 %IRSSI   = (
-    authors     => 'Svarre',
-#    contact     => 'svarre@svarre.net',
-	contact		=> 'sjk@ankeborg.nu',
+    authors     => 'Svante Kvarnström',
+    contact     => 'sjk@ankeborg.nu',
     name        => 'whocount.pl',
-    description => 'Counts the number of matches a /who lists',
+    description => 'Counts the number of matches in /who lists',
     license     => 'GPL',
-    url         => 'http://www.svarre.net/code.php',
-	url			=> 'http://sjk.ankeborg.nu',
+    url         => 'http://sjk.ankeborg.nu',
 );
 
 # ----------------------------------------------------------------------
@@ -66,13 +67,8 @@ Irssi::signal_add( 'event 315', 'end_who' );
 
 Irssi::theme_register(
     [
-        'whocount_loaded', '%R>>%n %_Scriptinfo:%_ Loaded $0 version $1 by $2.',
         'whocount', '%R>> %CWho:%n $0 $1'
     ]
 );
 
 # ----------------------------------------------------------------------
-
-Irssi::printformat( MSGLEVEL_CLIENTCRAP, 'whocount_Loaded', $IRSSI{name},
-    $VERSION, $IRSSI{authors} );
-
